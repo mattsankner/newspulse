@@ -1,10 +1,10 @@
 import tweepy
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import List, Dict, Any, Optional
 
-from app.core.config import settings
-from app.models.tweet import Tweet
+from ..core.config import settings
+from ..models.tweet import Tweet
 
 class TwitterClient:
     """Client for interacting with X (Twitter) API."""
@@ -52,7 +52,7 @@ class TwitterClient:
         self.logger.info(f"Searching for tweets matching: {query}")
         
         # Calculate start time
-        start_time = datetime.utcnow() - timedelta(days=days_back)
+        start_time = datetime.now(UTC) - timedelta(days=days_back)
         
         # Define tweet fields to retrieve
         tweet_fields = [
