@@ -1,0 +1,23 @@
+#Python
+__pycache__/
+*.py[cod]
+*.class
+.env
+.venv
+venv/
+ENV/
+*.egg-info/
+
+# Angular
+/frontend/node_modules
+/frontend/dist
+/frontend/.angular
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
