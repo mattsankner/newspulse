@@ -2,7 +2,7 @@ import re
 import logging
 from typing import List, Dict, Any
 
-from app.models.article import Article
+from ..models.article import Article
 
 class DataCleaner:
     """Class for cleaning and preprocessing article data."""

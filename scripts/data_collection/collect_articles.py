@@ -11,9 +11,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Add the backend directory to sys.path to import the app modules
-root_path = str(Path(__file__).resolve().parent.parent.parent)
-sys.path.insert(0, root_path)
+# # Add the backend directory to sys.path to import the app modules
+# root_path = str(Path(__file__).resolve().parent.parent.parent)
+# sys.path.insert(0, root_path)
 
 from backend.app.services.news_client import NewsClient
 from backend.app.models.article import Article
