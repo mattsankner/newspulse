@@ -2,56 +2,60 @@ import re
 import logging
 from typing import List, Dict, Any
 
-from app.models.tweet import Tweet
+from app.models.article import Article
 
 class DataCleaner:
-    """Class for cleaning and preprocessing tweet data."""
+    """Class for cleaning and preprocessing article data."""
     
     def __init__(self):
         """Initialize data cleaner."""
         self.logger = logging.getLogger(__name__)
     
-    def clean_tweets(self, tweets: List[Tweet]) -> List[Tweet]:
+    def clean_articles(self, articles: List[Article]) -> List[Article]:
         """
-        Clean a list of tweets.
+        Clean a list of articles.
         
         Args:
-            tweets: List of Tweet objects
+            articles: List of Article objects
             
         Returns:
-            Cleaned list of Tweet objects
+            Cleaned list of Article objects
         """
-        cleaned_tweets = []
+        cleaned_articles = []
         seen_ids = set()
         
-        for tweet in tweets:
+        for article in articles:
             # Skip if ID already seen (duplicate)
-            if tweet.id in seen_ids:
+            if article.id in seen_ids:
                 continue
                 
-            # Clean text
-            cleaned_text = self.clean_text(tweet.text)
+            # Clean title and content
+            cleaned_title = self.clean_text(article.title)
+            cleaned_description = self.clean_text(article.description or '')
+            cleaned_content = self.clean_text(article.content or '')
             
-            # Skip if text is empty after cleaning
-            if not cleaned_text:
+            # Skip if title is empty after cleaning
+            if not cleaned_title:
                 continue
                 
-            # Update tweet with cleaned text
-            tweet.text = cleaned_text
+            # Update article with cleaned text
+            article.title = cleaned_title
+            article.description = cleaned_description
+            article.content = cleaned_content
             
             # Add to result and mark as seen
-            cleaned_tweets.append(tweet)
-            seen_ids.add(tweet.id)
+            cleaned_articles.append(article)
+            seen_ids.add(article.id)
         
-        self.logger.info(f"Cleaned {len(tweets)} tweets, resulting in {len(cleaned_tweets)} valid tweets")
-        return cleaned_tweets
+        self.logger.info(f"Cleaned {len(articles)} articles, resulting in {len(cleaned_articles)} valid articles")
+        return cleaned_articles
     
     def clean_text(self, text: str) -> str:
         """
-        Clean tweet text.
+        Clean article text.
         
         Args:
-            text: Raw tweet text
+            text: Raw text
             
         Returns:
             Cleaned text
@@ -59,17 +63,15 @@ class DataCleaner:
         if not text:
             return ""
             
-        # Remove URLs
-        text = re.sub(r'https?://\\S+|www\\.\\S+', '', text)
-        
         # Remove HTML tags
         text = re.sub(r'<.*?>', '', text)
         
-        # Remove usernames
-        text = re.sub(r'@\\w+', '', text)
-        
-        # Remove hashtag symbol but keep the text
-        text = re.sub(r'#(\\w+)', r'\\1', text)
+        # Handle common encoding issues
+        text = text.replace('&amp;', '&')
+        text = text.replace('&lt;', '<')
+        text = text.replace('&gt;', '>')
+        text = text.replace('&quot;', '"')
+        text = text.replace('&#39;', "'")
         
         # Remove extra whitespace
         text = re.sub(r'\\s+', ' ', text)

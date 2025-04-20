@@ -6,6 +6,8 @@ __pycache__/
 .venv
 venv/
 ENV/
+pulse-env/
+pulse-venv/
 *.egg-info/
 
 # Angular
