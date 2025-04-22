@@ -1,0 +1,32 @@
+.mat-card {
+  margin-bottom: 1rem;
+}
+
+.mat-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mat-card-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.mat-card-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.mat-card-content {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mat-card-actions {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid #eee;
+}
