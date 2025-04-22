@@ -12,7 +12,7 @@ class NewsClient:
         self, 
         api_key: Optional[str] = None,
     ):
-        """Initialize Twitter client with API credentials."""
+        """Initialize NewsAPI client with API credentials."""
         self.api_key = api_key or settings.NEWS_API_KEY
         
         if not self.api_key:
@@ -45,7 +45,7 @@ class NewsClient:
         self.logger.info(f"Searching for articles related to: {topic}")
         
         # Calculate date range
-        to_date = datetime.utcnow()
+        to_date = datetime.now(UTC)
         from_date = to_date - timedelta(days=days_back)
         
         # Format dates as required by News API (YYYY-MM-DD)
@@ -63,6 +63,11 @@ class NewsClient:
                 page_size=page_size,
                 page=page
             )
+            
+            # Log API response status and total results
+            self.logger.info(f"NewsAPI Status: {response.get('status')}")
+            self.logger.info(f"Total Results: {response.get('totalResults')}")
+            
         except Exception as e:
             self.logger.error(f"Error fetching articles: {e}")
             return []
@@ -75,9 +80,9 @@ class NewsClient:
         articles = []
         for article_data in response['articles']:
             try:
-                # Generate a unique ID for the article (using URL hash)
+                # Generate a unique ID for the article (using URL hash) -> useful for db indexing, preventing duplicates, tracking articles across different API calls
                 import hashlib
-                url = article_data.get('url', '')
+                url = article_data.get('url', '') #.get() returns the value of the key if it exists, otherwise returns the second argument
                 article_id = hashlib.md5(url.encode()).hexdigest() if url else None
                 
                 if not article_id:
@@ -85,6 +90,11 @@ class NewsClient:
                 
                 # Convert published_at string to datetime
                 published_at = datetime.fromisoformat(article_data.get('publishedAt', '').replace('Z', '+00:00'))
+                """
+                Replaces 'Z' (Zulu/UTC timezone indicator) with '+00:00'
+                This is because Python's fromisoformat() expects timezone in the format '+00:00'
+                Example: "2024-04-20T05:56:56Z" → "2024-04-20T05:56:56+00:00"
+                """
                 
                 # Create Article object
                 article = Article(

@@ -1,0 +1,21 @@
+# Use Python 3.10 slim image as base
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install spaCy model for NLP processing
+RUN python -m spacy download en_core_web_sm
+
+# Copy application code
+COPY backend /app
+
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Run the FastAPI application
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"] 

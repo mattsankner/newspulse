@@ -2,6 +2,7 @@
 """
 Script to collect news articles on political topics and save them to a file.
 Usage: python collect_articles.py --topic "healthcare reform" --output articles.json
+Entry point of the app -> main script for collecting news articles
 """
 import argparse
 import json
@@ -10,6 +11,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
+from pydantic import HttpUrl
 
 # # Add the backend directory to sys.path to import the app modules
 # root_path = str(Path(__file__).resolve().parent.parent.parent)
@@ -80,13 +82,17 @@ def main():
     # Create directory if it doesn't exist
     output_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # Convert Article objects to dictionaries
-    articles_data = [article.dict() for article in articles]
+    #pydantic v2: model_dump() -> converts Pydantic model to a dictionary (replaces older .dict() method)
+    articles_data = [article.model_dump() for article in articles]
     
-    # Convert datetime objects to strings
+    # Convert datetime and HttpUrl objects to strings -> useful for JSON serialization -> converting all model fields/keys to strings(their basic Python types)
     for article in articles_data:
         if isinstance(article["published_at"], datetime):
             article["published_at"] = article["published_at"].isoformat()
+        if isinstance(article["url"], HttpUrl):
+            article["url"] = str(article["url"])
+        if article["url_to_image"] and isinstance(article["url_to_image"], HttpUrl):
+            article["url_to_image"] = str(article["url_to_image"])
     
     # Write to file
     with open(output_path, "w", encoding="utf-8") as f:

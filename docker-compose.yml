@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # FastAPI backend service
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/political_content
+      - NEWS_API_KEY=${NEWS_API_KEY}
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+
+  # Angular frontend service
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+  # PostgreSQL database service
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=political_content
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# Define named volume for database persistence
+volumes:
+  postgres_data: 
