@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
 class PoliticalStance(str, Enum):
@@ -11,12 +11,12 @@ class PoliticalStance(str, Enum):
 
 class Classification(BaseModel):
     """Model representing political stance classification."""
-    tweet_id: str
+    article_id: str
     stance: PoliticalStance
     confidence: float
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Consensus(BaseModel):
     """Model representing identified consensus between political viewpoints."""
@@ -29,4 +29,4 @@ class Consensus(BaseModel):
     common_ground: list[str] = []
     
     class Config:
-        orm_mode = True
+        from_attributes = True

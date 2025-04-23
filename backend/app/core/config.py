@@ -1,5 +1,5 @@
 import os
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings #Pydantic base settings class designed for environment variables
 from dotenv import load_dotenv #loads environment variables from .env file
 
 """Keeps configuration (API versions, credentials, URL's, CORS settings, etc.) out of business logic"""
@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
-        "postgresql://postgres:postgres@localhost:5432/political_content"
+        f"postgresql://{os.getenv('USER', os.getenv('USERNAME', 'postgres'))}@localhost:5432/political_content"
     )
     
     # CORS

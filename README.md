@@ -258,3 +258,109 @@ Running **News Pulse** should yield:
 
 🌟 **Enjoy exploring political consensus with News Pulse!** 🌟
 
+# API Testing Guide
+
+## Understanding the Flow
+
+1. **Data Collection Flow**:
+   ```
+   Your POST request → FastAPI Backend → NewsAPI → Your Database
+   ```
+   - You send a POST request to collect articles
+   - FastAPI receives the request and calls NewsAPI
+   - NewsAPI returns the articles
+   - FastAPI saves them to your PostgreSQL database
+
+2. **Data Retrieval Flow**:
+   ```
+   Your GET request → FastAPI Backend → Your Database → Response to You
+   ```
+   - You send a GET request to view articles
+   - FastAPI queries your PostgreSQL database
+   - Returns the articles as JSON
+
+## Testing Commands
+
+### 1. Start the Backend Server
+```bash
+# Terminal 1
+cd backend
+source venv/bin/activate
+./run.sh
+```
+
+### 2. Collect Articles (POST Request)
+```bash
+# Terminal 2
+# This sends a POST request to your FastAPI backend
+# The backend then calls NewsAPI and saves the results to your database
+curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=politics"
+
+# Collect articles about different topics
+curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=democrats"
+curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=republicans"
+curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=election"
+```
+
+### 3. View Articles (GET Request)
+```bash
+# Terminal 2 (continued)
+# View all articles in the database
+curl "http://localhost:8000/api/v1/articles/"
+
+# Filter articles by search term
+curl "http://localhost:8000/api/v1/articles/?search=democrat"
+curl "http://localhost:8000/api/v1/articles/?search=republican"
+
+# Paginate results
+curl "http://localhost:8000/api/v1/articles/?skip=0&limit=100"
+```
+
+### 4. Check Database Directly
+```bash
+# Terminal 3
+# Connect to PostgreSQL
+psql -U postgres -d political_content
+
+# Basic queries
+SELECT COUNT(*) FROM articles;
+SELECT title, source_name FROM articles LIMIT 5;
+
+# Advanced analysis
+SELECT source_name, COUNT(*) as article_count 
+FROM articles 
+GROUP BY source_name 
+ORDER BY article_count DESC;
+
+SELECT 
+    word, 
+    COUNT(*) as frequency
+FROM (
+    SELECT regexp_split_to_table(LOWER(title), '\s+') as word
+    FROM articles
+) words
+WHERE length(word) > 3
+GROUP BY word
+ORDER BY frequency DESC
+LIMIT 20;
+
+# Exit psql
+\q
+```
+
+## Understanding the Commands
+
+- **POST Requests** (`curl -X POST`): Used to collect new articles because:
+  - We're creating new data in the database
+  - The operation is not idempotent (multiple calls will create multiple entries)
+  - We're changing the state of the system
+
+- **GET Requests** (`curl`): Used to view articles because:
+  - We're retrieving existing data
+  - The operation is idempotent (multiple calls return the same data)
+  - We're not changing the system state
+
+- **Database Queries**: Used to:
+  - Verify data is being saved correctly
+  - Perform analysis not available through the API
+  - Debug and troubleshoot issues

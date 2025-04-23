@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models import Article, PoliticalStance
 from app.models.database import ArticleModel, ClassificationModel
+from app.services.news_client import NewsClient
+from app.services.article_service import ArticleService
 
 router = APIRouter()
 
@@ -89,4 +91,26 @@ async def export_articles(
         raise HTTPException(
             status_code=500,
             detail=f"Error exporting articles: {str(e)}"
-        ) 
+        )
+
+@router.post("/collect")
+async def collect_articles(
+    topic: str = Query(..., description="Topic to collect articles about"),
+    db: Session = Depends(get_db)
+) -> dict:
+    """
+    Collect articles about a specific topic and save them to the database.
+    """
+    # Initialize NewsClient
+    news_client = NewsClient()
+    
+    # Get articles from NewsAPI
+    articles = news_client.get_articles_by_topic(topic)
+    
+    # Save articles to database
+    saved_articles = ArticleService.save_articles(db, articles)
+    
+    return {
+        "message": f"Successfully collected and saved {len(saved_articles)} articles",
+        "topic": topic
+    } 
