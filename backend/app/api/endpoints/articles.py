@@ -293,7 +293,7 @@ async def get_saved_articles(
     Get articles that have been saved to the database.
     """
     try:
-        # Get saved articles with pagination
+        # Get saved articles with pagination, ordered by published_at descending
         articles = db.query(ArticleModel).order_by(ArticleModel.published_at.desc()).offset(offset).limit(limit).all()
         
         return articles
