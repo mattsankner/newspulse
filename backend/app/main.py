@@ -32,7 +32,7 @@ Visit http://127.0.0.1:8000/redoc for ReDoc
 
 # Create FastAPI application
 app = FastAPI(
-    title="Political Content Analyzer",
+    title="News Pulse",
     description="An application that analyzes political content from news articles",
     version="0.1.0"
 )

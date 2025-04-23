@@ -1,0 +1,26 @@
+<div class="search-page">
+  <h1>Search Political Articles</h1>
+  
+  <div class="search-container">
+    <mat-form-field appearance="fill" class="search-input">
+      <mat-label>Search Query</mat-label>
+      <input matInput [(ngModel)]="searchQuery" placeholder="Enter your search query">
+    </mat-form-field>
+
+    <div class="spacer"></div>
+
+    <mat-form-field appearance="fill" class="search-type">
+      <mat-label>Search Type</mat-label>
+      <mat-select [(ngModel)]="searchType">
+        <mat-option value="headlines">Top Headlines</mat-option>
+        <mat-option value="topic">By Topic</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="spacer"></div>
+
+    <button mat-raised-button color="primary" (click)="search()" class="search-button">
+      Search
+    </button>
+  </div>
+</div> 

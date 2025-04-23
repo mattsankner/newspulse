@@ -27,7 +27,7 @@ activate_venv() {
 }
 
 # Try to activate virtual environment
-activate_venv
+activate_venv()
 
 # Run FastAPI application with uvicorn
 # --reload: Enable auto-reload for development

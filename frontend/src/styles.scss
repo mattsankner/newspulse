@@ -1,6 +1,312 @@
 /* You can add global styles to this file, and also import other style files */
 @use "tailwindcss" as *;
 
-// Your existing styles below
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Custom Theme Colors */
+:root {
+  --rich-brown: #4E3524;
+  --coffee-brown: #6B4423;
+  --saddle-brown: #8B4513;
+  --burlywood: #DEB887;
+  --old-lace: #FDF5E6;
+  --wheat: #F5DEB3;
+  --tan: #D2B48C;
+  --peru: #CD853F;
+  --sepia: #704214;
+  --cream: #FFFDD0;
+}
+
+/* Global Typography */
+body {
+  font-family: 'Georgia', 'Baskerville', 'Times New Roman', serif;
+  color: var(--rich-brown);
+  background-color: var(--cream);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Palatino', 'Garamond', 'Times New Roman', serif;
+  color: var(--coffee-brown);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1.2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* Angular Material Global Overrides */
+
+/* Form Fields */
+.mat-mdc-form-field {
+  font-family: 'Georgia', 'Baskerville', serif !important;
+}
+
+.mat-mdc-text-field-wrapper {
+  background-color: var(--old-lace) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.mat-mdc-form-field-flex {
+  padding: 0 12px !important;
+}
+
+.mat-mdc-form-field-infix {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+.mat-mdc-form-field-label {
+  color: var(--coffee-brown) !important;
+  font-family: 'Georgia', 'Baskerville', serif !important;
+}
+
+.mat-mdc-input-element {
+  color: var(--rich-brown) !important;
+  font-family: 'Georgia', 'Baskerville', serif !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+/* CRITICAL: Remove pink color from focus states and hover states */
+.mdc-text-field--focused .mdc-floating-label {
+  color: var(--coffee-brown) !important;
+}
+
+.mdc-text-field--filled.mdc-text-field--focused {
+  background-color: var(--old-lace) !important;
+}
+
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__leading,
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__notch,
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: var(--coffee-brown) !important;
+  border-width: 2px !important;
+}
+
+/* Remove underlines from input fields */
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-line-ripple::before,
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+  border-bottom-width: 0 !important;
+  border-bottom-color: transparent !important;
+}
+
+.mdc-text-field .mdc-line-ripple::before,
+.mdc-text-field .mdc-line-ripple::after {
+  border-bottom-width: 0 !important;
+  border-bottom-color: transparent !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: rgba(107, 68, 35, 0.04) !important;
+}
+
+/* Override all Angular Material focus and hover colors */
+.mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
+  color: var(--coffee-brown) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-ripple {
+  background-color: var(--coffee-brown) !important;
+}
+
+.mat-mdc-select-panel .mat-mdc-option.mat-selected:not(.mat-option-multiple):not(.mat-option-disabled) {
+  color: var(--coffee-brown) !important;
+}
+
+.mat-primary .mat-pseudo-checkbox-checked {
+  background: var(--coffee-brown) !important;
+}
+
+/* Override dropdown indicator */
+.mat-mdc-select-arrow-wrapper {
+  color: var(--coffee-brown) !important;
+}
+
+/* Override floating label color */
+.mdc-floating-label--float-above {
+  color: var(--coffee-brown) !important;
+}
+
+/* Override active select underline */
+.mdc-select__dropdown-icon-active {
+  color: var(--coffee-brown) !important;
+}
+
+/* Fix chip selection colors */
+.mat-mdc-chip.mat-mdc-standard-chip.mat-primary.mat-mdc-chip-selected,
+.mat-mdc-chip.mat-mdc-standard-chip.mat-primary.mat-mdc-chip-highlighted {
+  background-color: var(--coffee-brown) !important;
+}
+
+/* Fix any remaining pink borders */
+.mat-mdc-text-field-wrapper .mdc-notched-outline__leading,
+.mat-mdc-text-field-wrapper .mdc-notched-outline__notch,
+.mat-mdc-text-field-wrapper .mdc-notched-outline__trailing {
+  border-color: var(--tan) !important;
+}
+
+.mat-mdc-text-field-wrapper:hover .mdc-notched-outline__leading,
+.mat-mdc-text-field-wrapper:hover .mdc-notched-outline__notch,
+.mat-mdc-text-field-wrapper:hover .mdc-notched-outline__trailing {
+  border-color: var(--coffee-brown) !important;
+}
+
+.mat-mdc-select:focus:not(.mat-mdc-select-disabled) .mat-mdc-select-arrow {
+  color: var(--coffee-brown) !important;
+}
+
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: var(--coffee-brown) !important;
+}
+
+/* Buttons */
+.mat-mdc-button, 
+.mat-mdc-raised-button, 
+.mat-mdc-outlined-button, 
+.mat-mdc-unelevated-button {
+  font-family: 'Georgia', 'Baskerville', serif !important;
+  letter-spacing: 0.02em !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.mat-mdc-raised-button:not([disabled]) {
+  background-color: var(--coffee-brown) !important;
+  color: var(--old-lace) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.mat-mdc-raised-button:not([disabled]):hover {
+  background-color: var(--saddle-brown) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Select Dropdowns */
+.mat-mdc-select-value {
+  color: var(--rich-brown) !important;
+  font-family: 'Georgia', 'Baskerville', serif !important;
+}
+
+.mat-mdc-select-arrow {
+  color: var(--coffee-brown) !important;
+}
+
+.mat-mdc-select-panel {
+  background-color: var(--old-lace) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.mat-mdc-option {
+  color: var(--rich-brown) !important;
+  font-family: 'Georgia', 'Baskerville', serif !important;
+}
+
+.mat-mdc-option:hover:not([disabled]) {
+  background-color: var(--burlywood) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: var(--coffee-brown) !important;
+  color: var(--old-lace) !important;
+}
+
+/* Table Styling */
+.mat-mdc-table {
+  background-color: var(--old-lace) !important;
+  font-family: 'Georgia', 'Baskerville', serif !important;
+}
+
+.mat-mdc-header-cell {
+  background-color: var(--coffee-brown) !important;
+  color: var(--old-lace) !important;
+  font-weight: bold !important;
+  font-family: 'Palatino', 'Garamond', serif !important;
+  letter-spacing: 0.02em !important;
+}
+
+.mat-mdc-cell {
+  color: var(--rich-brown) !important;
+  font-family: 'Georgia', 'Baskerville', serif !important;
+}
+
+.mat-mdc-row:hover {
+  background-color: var(--burlywood) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Progress Spinner */
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--coffee-brown) !important;
+}
+
+/* Custom Container Styles */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--cream);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+}
+
+.paper-effect {
+  background-color: var(--old-lace);
+  border: 1px solid var(--tan);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.newspaper-heading {
+  font-family: 'Bodoni MT', 'Didot', 'Times New Roman', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+  color: var(--sepia);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.section-divider {
+  border-top: 2px solid var(--burlywood);
+  margin: 2rem 0;
+  position: relative;
+}
+
+.section-divider::after {
+  content: "☕";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--cream);
+  padding: 0 10px;
+  font-size: 1.2rem;
+  color: var(--coffee-brown);
+}
+
+/* You can add additional Tailwind CSS at the bottom if needed */

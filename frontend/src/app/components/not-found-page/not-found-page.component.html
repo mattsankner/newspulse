@@ -1,0 +1,45 @@
+<div class="not-found-container">
+  <div class="newspaper">
+    <div class="newspaper-header">
+      <h1 class="newspaper-title">THE DAILY INSIGHT</h1>
+      <div class="newspaper-date">{{ today | date:'EEEE, MMMM d, y' }}</div>
+    </div>
+    
+    <div class="headline">
+      <h2>PAGE NOT FOUND</h2>
+      <h3>404 Error: Requested Content Missing From Archives</h3>
+    </div>
+    
+    <div class="article">
+      <p class="lead">
+        Our journalists have searched high and low, but the page you're looking for seems to have been misplaced or never existed.
+      </p>
+      
+      <div class="columns">
+        <p>
+          The page you requested could not be found in our extensive archives. Our team of investigative reporters has looked through all our files but came up empty-handed.
+        </p>
+        
+        <p>
+          "We've searched through all our records dating back to the beginning of the publication, but we couldn't locate the requested information," said our Chief Digital Archivist.
+        </p>
+        
+        <p>
+          It's possible the URL was mistyped, the content was moved, or the page no longer exists. Rather than continue this fruitless search, we recommend returning to our front page to find the latest news and insights.
+        </p>
+        
+        <blockquote class="quote">
+          "Sometimes the most important stories are the ones right in front of us, not the ones we can't find."
+        </blockquote>
+      </div>
+    </div>
+    
+    <div class="cta">
+      <a mat-raised-button routerLink="/">Return to Front Page</a>
+    </div>
+    
+    <div class="newspaper-footer">
+      <p>© {{ today | date:'y' }} Political News Insights - All opinions represented, all perspectives respected</p>
+    </div>
+  </div>
+</div>

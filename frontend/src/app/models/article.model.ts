@@ -1,7 +1,7 @@
 export interface Article {
   id: string;
   title: string;
-  description?: string;
+  description: string;
   content?: string;
   url: string;
   source_id?: string;
@@ -9,19 +9,25 @@ export interface Article {
   author?: string;
   published_at: string;
   url_to_image?: string;
+  political_stance?: string;
+  classification?: Classification;
+  raw_data?: any;
 }
 
 export enum PoliticalStance {
-  LEFT = 'left',
-  CENTER = 'center',
-  RIGHT = 'right',
-  UNKNOWN = 'unknown'
+  Left = 'left',
+  Center = 'center',
+  Right = 'right'
 }
 
 export interface Classification {
-  article_id: string;
-  stance: PoliticalStance;
-  confidence: number;
+  id: number;
+  topic: string;
+  summary: string;
+  left_points: string[];
+  center_points: string[];
+  right_points: string[];
+  common_ground: string[];
 }
 
 export interface Consensus {

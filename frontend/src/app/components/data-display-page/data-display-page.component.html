@@ -1,0 +1,102 @@
+<div class="data-display-page">
+  <h1>Article Database</h1>
+  
+  <div class="filters">
+    <mat-form-field appearance="fill" class="search-input">
+      <mat-label>Search Articles</mat-label>
+      <input matInput [(ngModel)]="searchQuery" (keyup.enter)="onSearch()">
+      <button matSuffix mat-icon-button (click)="onSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="stance-select">
+      <mat-label>Political Stance</mat-label>
+      <mat-select [(ngModel)]="selectedStance" (selectionChange)="onStanceChange()">
+        <mat-option value="">All</mat-option>
+        <mat-option [value]="PoliticalStance.Left">Left</mat-option>
+        <mat-option [value]="PoliticalStance.Center">Center</mat-option>
+        <mat-option [value]="PoliticalStance.Right">Right</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="actions">
+    <div class="selection-summary" *ngIf="selection.selected.length > 0">
+      <span>{{ selection.selected.length }} article(s) selected</span>
+    </div>
+    <div class="button-group">
+      <button mat-raised-button color="primary" (click)="saveToDatabase()" [disabled]="isSaving || selection.selected.length === 0">
+        <mat-icon>save</mat-icon>
+        Save Selected to Database
+      </button>
+      
+      <button mat-raised-button color="accent" (click)="toggleSavedArticles()">
+        <mat-icon>{{ showingSavedArticles ? 'search' : 'library_books' }}</mat-icon>
+        {{ showingSavedArticles ? 'Show Search Results' : 'View Saved Articles' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="database-status" *ngIf="showingSavedArticles">
+    <p>Showing articles saved in the database</p>
+  </div>
+
+  <div class="table-container" *ngIf="!isLoading">
+    <table mat-table [dataSource]="articles" *ngIf="hasData">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="'Select all articles'">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let article">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(article) : null"
+                        [checked]="selection.isSelected(article)"
+                        [aria-label]="'Select article'">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let article">{{article.title}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let article">{{article.description}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="source">
+        <th mat-header-cell *matHeaderCellDef>Source</th>
+        <td mat-cell *matCellDef="let article">{{article.source_name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="published_at">
+        <th mat-header-cell *matHeaderCellDef>Published</th>
+        <td mat-cell *matCellDef="let article">{{article.published_at | date}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="political_stance">
+        <th mat-header-cell *matHeaderCellDef>Stance</th>
+        <td mat-cell *matCellDef="let article">{{article.political_stance}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <div class="no-data" *ngIf="!hasData">
+      <p>No articles found matching your criteria.</p>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+</div> 

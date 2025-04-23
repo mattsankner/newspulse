@@ -290,16 +290,33 @@ source venv/bin/activate
 ```
 
 ### 2. Collect Articles (POST Request)
+
+#### Using get_articles_by_topic
 ```bash
 # Terminal 2
-# This sends a POST request to your FastAPI backend
-# The backend then calls NewsAPI and saves the results to your database
+# Basic topic search
 curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=politics"
 
-# Collect articles about different topics
-curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=democrats"
-curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=republicans"
-curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=election"
+# Topic search with language filter (e.g., Spanish articles)
+curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=politics&language=es"
+
+# Topic search with date range (last 30 days)
+curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=politics&days_back=30"
+
+# Topic search with pagination
+curl -X POST "http://localhost:8000/api/v1/articles/collect?topic=politics&page_size=50&page=2"
+```
+
+#### Using get_top_headlines
+```bash
+# Get US political headlines
+curl -X POST "http://localhost:8000/api/v1/articles/collect?category=politics&country=us"
+
+# Get headlines from specific category (e.g., business)
+curl -X POST "http://localhost:8000/api/v1/articles/collect?category=business"
+
+# Get headlines with pagination
+curl -X POST "http://localhost:8000/api/v1/articles/collect?category=politics&page_size=20&page=1"
 ```
 
 ### 3. View Articles (GET Request)
@@ -311,6 +328,12 @@ curl "http://localhost:8000/api/v1/articles/"
 # Filter articles by search term
 curl "http://localhost:8000/api/v1/articles/?search=democrat"
 curl "http://localhost:8000/api/v1/articles/?search=republican"
+
+# Filter by date range
+curl "http://localhost:8000/api/v1/articles/?start_date=2024-01-01&end_date=2024-03-31"
+
+# Filter by source
+curl "http://localhost:8000/api/v1/articles/?source=CNN"
 
 # Paginate results
 curl "http://localhost:8000/api/v1/articles/?skip=0&limit=100"
@@ -350,6 +373,8 @@ LIMIT 20;
 
 ## Understanding the Commands
 
+
+
 - **POST Requests** (`curl -X POST`): Used to collect new articles because:
   - We're creating new data in the database
   - The operation is not idempotent (multiple calls will create multiple entries)
@@ -364,3 +389,20 @@ LIMIT 20;
   - Verify data is being saved correctly
   - Perform analysis not available through the API
   - Debug and troubleshoot issues
+
+- **Example** ('POST /api/v1/articles/collect'):
+  - Curl request hits FastAPI
+  - FastAPI calls NewsAPI using NewsClient
+  - NewsAPI returns articles
+  - FastAPI saves them to db
+  - FastAPI returns success msg
+- **Example** ('POST /api/v1/articles'): 
+  - Your request hits FastAPI
+  - FastAPI queries your database
+  - Returns the articles stored in your databasea
+
+### psql -U mattsankner -d political_content
+   SELECT id, title, source_name FROM articles ORDER BY published_at DESC LIMIT 10;
+
+### Latest 
+   python -c "from app.db.session import SessionLocal; from app.models.database import ArticleModel; db = SessionLocal(); articles = db.query(ArticleModel).limit(10).all(); print(f'Total articles: {db.query(ArticleModel).count()}'); [print(f'ID: {a.id}, Title: {a.title}, Source: {a.source_name}') for a in articles]; db.close()"

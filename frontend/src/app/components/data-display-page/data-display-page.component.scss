@@ -1,0 +1,205 @@
+.data-display-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--rich-brown);
+  font-family: 'Georgia', 'Baskerville', 'Times New Roman', serif;
+
+  h1 {
+    font-family: 'Bodoni MT', 'Didot', 'Times New Roman', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--sepia);
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+
+    .search-input {
+      flex: 2;
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+
+      ::ng-deep .mat-mdc-form-field-infix {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        background-color: var(--old-lace);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      ::ng-deep .mat-mdc-form-field-flex {
+        padding: 0 12px;
+      }
+
+      ::ng-deep .mat-mdc-form-field-label {
+        color: var(--coffee-brown);
+      }
+
+      ::ng-deep .mat-mdc-input-element {
+        color: var(--rich-brown);
+        font-family: 'Georgia', 'Baskerville', serif;
+      }
+    }
+
+    .stance-select {
+      flex: 1;
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+
+      ::ng-deep .mat-mdc-form-field-infix {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        background-color: var(--old-lace);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      ::ng-deep .mat-mdc-form-field-flex {
+        padding: 0 12px;
+      }
+
+      ::ng-deep .mat-mdc-form-field-label {
+        color: var(--coffee-brown);
+      }
+
+      ::ng-deep .mat-mdc-select-value {
+        color: var(--rich-brown);
+        font-family: 'Georgia', 'Baskerville', serif;
+      }
+
+      ::ng-deep .mat-mdc-select-arrow {
+        color: var(--coffee-brown);
+      }
+    }
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    background-color: var(--old-lace);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    .selection-summary {
+      font-weight: bold;
+      color: var(--coffee-brown);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+      
+      button {
+        font-family: 'Georgia', 'Baskerville', serif;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        
+        &:hover:not([disabled]) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        &:disabled {
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+  
+  .database-status {
+    background-color: var(--burlywood);
+    color: var(--rich-brown);
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    p {
+      margin: 0;
+    }
+  }
+
+  .table-container {
+    background-color: var(--old-lace);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th {
+        background-color: var(--burlywood);
+        color: var(--rich-brown);
+        font-weight: bold;
+        text-align: left;
+        padding: 12px 8px;
+      }
+      
+      td {
+        padding: 12px 8px;
+        border-bottom: 1px solid var(--tan);
+        color: var(--rich-brown);
+        
+        &:nth-child(1) {
+          width: 50px;
+        }
+      }
+      
+      tr:hover {
+        background-color: rgba(222, 184, 135, 0.1);
+      }
+    }
+    
+    .no-data {
+      padding: 2rem;
+      text-align: center;
+      color: var(--coffee-brown);
+      font-style: italic;
+    }
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    
+    ::ng-deep .mat-progress-spinner circle {
+      stroke: var(--coffee-brown);
+    }
+  }
+} 

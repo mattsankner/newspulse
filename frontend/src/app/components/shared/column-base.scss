@@ -1,0 +1,118 @@
+// Base styles for column components
+.column-container {
+  height: 100%;
+  
+  h2 {
+    font-family: 'Palatino', 'Garamond', 'Times New Roman', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--coffee-brown);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--burlywood);
+    letter-spacing: 0.02em;
+  }
+  
+  h3 {
+    font-family: 'Georgia', 'Baskerville', 'Times New Roman', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--rich-brown);
+    margin-bottom: 0.75rem;
+  }
+  
+  p {
+    font-family: 'Georgia', 'Baskerville', 'Times New Roman', serif;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--rich-brown);
+    margin-bottom: 1rem;
+  }
+  
+  .section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(107, 68, 35, 0.2);
+    
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+  
+  ul, ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+    
+    li {
+      font-family: 'Georgia', 'Baskerville', 'Times New Roman', serif;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: var(--rich-brown);
+      margin-bottom: 0.5rem;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  
+  .highlight {
+    background-color: rgba(222, 184, 135, 0.3);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+  }
+  
+  .quote {
+    font-style: italic;
+    padding-left: 1rem;
+    border-left: 3px solid var(--burlywood);
+    margin: 1rem 0;
+  }
+  
+  .article-meta {
+    font-family: 'Georgia', 'Baskerville', 'Times New Roman', serif;
+    font-size: 0.9rem;
+    color: rgba(78, 53, 36, 0.7);
+    margin-bottom: 0.5rem;
+    
+    .source {
+      font-weight: 600;
+    }
+    
+    .date {
+      margin-left: 0.5rem;
+    }
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    
+    &.left {
+      background-color: rgba(0, 0, 255, 0.1);
+      color: navy;
+    }
+    
+    &.center {
+      background-color: rgba(128, 0, 128, 0.1);
+      color: purple;
+    }
+    
+    &.right {
+      background-color: rgba(255, 0, 0, 0.1);
+      color: darkred;
+    }
+    
+    &.common {
+      background-color: rgba(0, 128, 0, 0.1);
+      color: darkgreen;
+    }
+  }
+} 

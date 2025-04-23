@@ -1,38 +1,37 @@
 <div class="dashboard">
-    <h1>Political Dashboard</h1>
-</div>
-
-<div class="mb-4 p-4 bg-white rounded shadow">
-  <div class="flex flex-col md:flex-row gap-4">
-    <div class="flex-grow">
-      <mat-form-field class="w-full">
+  <h1>Political Analysis</h1>
+  
+  <div class="search-container">
+    <div class="form-row">
+      <mat-form-field class="search-input" appearance="fill">
         <mat-label>Search Political Topics</mat-label>
-        <input matInput placeholder="Enter keywords..." (keyup.enter)="searchTopics()">
+        <input matInput placeholder="Enter a topic..." />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
     </div>
-    <div>
-      <button mat-raised-button color="primary" (click)="searchTopics()">
+    
+    <div class="form-row">
+      <button mat-raised-button class="search-button" (click)="searchTopics()">
+        <mat-icon>search</mat-icon>
         Search
       </button>
-    </div>
-    <div>
-      <button mat-stroked-button [disabled]="!hasData" (click)="exportCsv()">
+      
+      <button mat-raised-button class="export-button" [disabled]="!hasData" (click)="exportCsv()">
+        <mat-icon>file_download</mat-icon>
         Export CSV
       </button>
     </div>
   </div>
-</div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-  <app-left-column *ngIf="hasData"></app-left-column>
-  <app-center-column *ngIf="hasData"></app-center-column>
-  <app-right-column *ngIf="hasData"></app-right-column>
-  
-  <div *ngIf="!hasData" class="col-span-3 p-10 text-center bg-white rounded shadow">
-    <mat-icon class="text-6xl text-gray-400">search</mat-icon>
-    <p class="text-xl text-gray-500 mt-4">
-      Search for political topics to begin analyzing content.
-    </p>
+  <div *ngIf="hasData" class="columns-container">
+    <app-left-column></app-left-column>
+    <app-center-column></app-center-column>
+    <app-right-column></app-right-column>
+  </div>
+
+  <div *ngIf="!hasData" class="no-data-container">
+    <mat-icon>search</mat-icon>
+    <p>Search for political topics to see analysis</p>
+    <p>Discover insights across the political spectrum</p>
   </div>
 </div> 

@@ -1,0 +1,143 @@
+@use '@angular/material' as mat;
+
+// Define custom palette
+$coffee-primary: (
+  50: #f8f3ed,
+  100: #e8d8c7,
+  200: #d8beab,
+  300: #c7a38f,
+  400: #b78a73,
+  500: #a67057,
+  600: #8b4513,
+  700: #6B4423,
+  800: #4E3524,
+  900: #362313,
+  contrast: (
+    50: #4E3524,
+    100: #4E3524,
+    200: #4E3524,
+    300: #4E3524,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  )
+);
+
+$coffee-accent: (
+  50: #fff8e1,
+  100: #ffecb3,
+  200: #ffe082,
+  300: #ffd54f,
+  400: #ffca28,
+  500: #DEB887,
+  600: #d4a76a,
+  700: #CD853F,
+  800: #b57224,
+  900: #a15c0a,
+  contrast: (
+    50: #4E3524,
+    100: #4E3524,
+    200: #4E3524,
+    300: #4E3524,
+    400: #4E3524,
+    500: #4E3524,
+    600: #4E3524,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  )
+);
+
+$coffee-warn: (
+  50: #fbe9e7,
+  100: #ffccbc,
+  200: #ffab91,
+  300: #ff8a65,
+  400: #ff7043,
+  500: #ff5722,
+  600: #f4511e,
+  700: #e64a19,
+  800: #d84315,
+  900: #bf360c,
+  contrast: (
+    50: #4E3524,
+    100: #4E3524,
+    200: #4E3524,
+    300: #4E3524,
+    400: #4E3524,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  )
+);
+
+// Define the color palettes
+$coffee-theme-primary: mat.define-palette($coffee-primary, 700, 500, 900);
+$coffee-theme-accent: mat.define-palette($coffee-accent, 500);
+$coffee-theme-warn: mat.define-palette($coffee-warn, 500);
+
+// Create the theme
+$coffee-theme: mat.define-light-theme((
+  color: (
+    primary: $coffee-theme-primary,
+    accent: $coffee-theme-accent,
+    warn: $coffee-theme-warn,
+  ),
+  typography: mat.define-typography-config(
+    $font-family: 'Georgia, Baskerville, "Times New Roman", serif',
+    $headline-1: mat.define-typography-level(3rem, 3.5rem, 700, $letter-spacing: 0.05em),
+    $headline-2: mat.define-typography-level(2.5rem, 3rem, 600),
+    $headline-3: mat.define-typography-level(2rem, 2.5rem, 600),
+    $headline-4: mat.define-typography-level(1.5rem, 2rem, 600),
+    $headline-5: mat.define-typography-level(1.25rem, 1.75rem, 600),
+    $headline-6: mat.define-typography-level(1.1rem, 1.5rem, 600),
+    $body-1: mat.define-typography-level(1.1rem, 1.6, 400),
+    $body-2: mat.define-typography-level(1rem, 1.5, 400),
+    $subtitle-1: mat.define-typography-level(1.1rem, 1.5, 500),
+    $subtitle-2: mat.define-typography-level(1rem, 1.4, 500, $letter-spacing: 0.01em),
+    $button: mat.define-typography-level(1rem, 1.4, 500, $letter-spacing: 0.02em),
+  ),
+  density: 0,
+));
+
+// Import Material form field styles with overrides
+@use '@angular/material' as mat-orig;
+@include mat-orig.mdc-form-field-density(0);
+
+// Override Input specific colors
+@mixin my-input-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  
+  .mat-mdc-input-element {
+    caret-color: mat-orig.get-color-from-palette($primary, 700);
+  }
+  
+  .mat-mdc-form-field-focus-overlay {
+    background-color: rgba(mat-orig.get-color-from-palette($primary, 700), 0.04);
+  }
+
+  .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
+    color: mat-orig.get-color-from-palette($primary, 700);
+  }
+  
+  .mat-mdc-form-field-ripple {
+    background-color: mat-orig.get-color-from-palette($primary, 700);
+  }
+  
+  // Override mdc-text-field filled line colors
+  .mdc-line-ripple::before, 
+  .mdc-line-ripple::after {
+    border: none !important;
+    border-bottom-color: transparent !important;
+  }
+}
+
+// Export the custom theme
+@include mat.all-component-themes($coffee-theme);
+@include my-input-theme($coffee-theme); 

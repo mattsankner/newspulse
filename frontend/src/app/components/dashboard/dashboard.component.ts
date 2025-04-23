@@ -8,8 +8,10 @@ import { LeftColumnComponent } from '../left-column/left-column.component';
 import { CenterColumnComponent } from '../center-column/center-column.component';
 import { RightColumnComponent } from '../right-column/right-column.component';
 import { ArticleService } from '../../services/article.service';
-import { PoliticalStanceService } from '../../services/political-stance.service';
+import { StanceService } from '../../services/stance.service';
 import { Article, PoliticalStance } from '../../models/article.model';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,8 +26,11 @@ import { Article, PoliticalStance } from '../../models/article.model';
     MatIconModule,
     LeftColumnComponent,
     CenterColumnComponent,
-    RightColumnComponent
-  ]
+    RightColumnComponent,
+    FormsModule,
+    HttpClientModule
+  ],
+  providers: [ArticleService, StanceService]
 })
 export class DashboardComponent {
   hasData = false;
@@ -33,23 +38,15 @@ export class DashboardComponent {
   
   constructor(
     private articleService: ArticleService,
-    private politicalStanceService: PoliticalStanceService
+    private stanceService: StanceService
   ) {}
   
   searchTopics(): void {
-    if (!this.searchQuery.trim()) return;
-    
-    this.articleService.getArticles(undefined, this.searchQuery)
-      .subscribe(articles => {
-        this.hasData = articles.length > 0;
-        // TODO: Pass articles to child components
-      });
+    console.log('Searching for topics...');
+    this.hasData = true; // For UI testing
   }
   
   exportCsv(): void {
-    this.articleService.exportCsv(undefined, this.searchQuery)
-      .subscribe(blob => {
-        // TODO: Handle CSV download
-      });
+    console.log('Exporting data as CSV...');
   }
 }

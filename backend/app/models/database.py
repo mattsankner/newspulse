@@ -1,3 +1,23 @@
+"""
+Database Models for News Pulse
+
+This module defines the SQLAlchemy models for the PostgreSQL database, including:
+- ArticleModel: Stores news articles with metadata and content
+- ClassificationModel: Tracks political stance classifications for articles
+- ConsensusModel: Stores identified consensus points between political viewpoints
+
+The models use SQLAlchemy's declarative base and include:
+- Column definitions with appropriate data types
+- Relationships between models (e.g., article-classification)
+- Table names and constraints
+- Default values and nullable settings
+
+These models serve as the foundation for:
+- Storing article data from NewsAPI
+- Tracking political stance classifications
+- Maintaining consensus analysis results
+"""
+
 from datetime import datetime
 from typing import List, Optional
 
@@ -7,11 +27,20 @@ from sqlalchemy.orm import relationship
 
 from app.models.stance import PoliticalStance
 
+
 # Create declarative base class for models
 Base = declarative_base()
 
 class ArticleModel(Base):
     """SQLAlchemy model for news articles.
+
+    Has a one-to-one relationship with ClassificationModel
+    Includes fields for all article metadata and classification results
+    Uses text type for large text fields (content, description, title)
+    Uses string type for smaller text fields (id, url, source_id, source_name, author)
+    Uses datetime type for timestamp fields (published_at)
+    Uses enum type for political stance classification
+    Uses JSON type for storing raw data from news API
     
     Attributes:
         id: Unique identifier for the article
@@ -45,6 +74,11 @@ class ArticleModel(Base):
 
 class ClassificationModel(Base):
     """SQLAlchemy model for political stance classifications.
+
+    Links to articles via foreign key
+    Uses enum type for political stance classification
+    Uses float type for confidence score for classification
+    Uses datetime type for timestamp of classification
     
     Attributes:
         id: Auto-incrementing primary key

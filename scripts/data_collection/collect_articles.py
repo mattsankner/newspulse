@@ -85,7 +85,10 @@ def main():
     #pydantic v2: model_dump() -> converts Pydantic model to a dictionary (replaces older .dict() method)
     articles_data = [article.model_dump() for article in articles]
     
-    # Convert datetime and HttpUrl objects to strings -> useful for JSON serialization -> converting all model fields/keys to strings(their basic Python types)
+    # Convert datetime and HttpUrl objects -> converting all model fields/keys to strings(their basic Python types)
+    # This converts special types to strings because:
+    # JSON can't natively serialize datetime or HttpUrl objects
+    # We need plain strings for JSON storage
     for article in articles_data:
         if isinstance(article["published_at"], datetime):
             article["published_at"] = article["published_at"].isoformat()
