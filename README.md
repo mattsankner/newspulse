@@ -10,34 +10,6 @@ News Pulse is a web application that aggregates and analyzes political content f
 - Node.js 18 or higher
 - PostgreSQL 14 or higher
 - Git
-- GitHub account
-
-### GitHub Setup
-
-1. **Create a new repository** on GitHub:
-   - Go to https://github.com/new
-   - Name your repository (e.g., "newspulse")
-   - Choose "Public" or "Private" visibility
-   - Do NOT initialize with README, .gitignore, or license
-   - Click "Create repository"
-
-2. **Initialize and push your local repository**:
-   ```bash
-   # Initialize git (if not already done)
-   git init
-
-   # Add all files
-   git add .
-
-   # Commit changes
-   git commit -m "Initial commit"
-
-   # Add remote repository
-   git remote add origin https://github.com/YOUR_USERNAME/newspulse.git
-
-   # Push to main branch
-   git push -u origin main
-   ```
 
 ### Installation
 
