@@ -4,7 +4,6 @@
   <!-- Filter Controls -->
   <div class="filter-section">
     <mat-form-field class="filter-field">
-      <mat-label>Filter By</mat-label>
       <mat-select [(ngModel)]="selectedFilter" (selectionChange)="onFilterChange()">
         <mat-option value="title">Title (Alphabetical)</mat-option>
         <mat-option value="source_name">Source (Alphabetical)</mat-option>
@@ -13,8 +12,7 @@
     </mat-form-field>
 
     <mat-form-field class="search-field">
-      <mat-label>Search</mat-label>
-      <input matInput [(ngModel)]="searchQuery" placeholder="Search in title or description">
+      <input matInput [(ngModel)]="searchQuery">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
     
