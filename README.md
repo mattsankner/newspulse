@@ -41,19 +41,7 @@ News Pulse is a web application that aggregates and analyzes political content f
 
 ### Running the Application
 
-#### Option 1: Using Docker (Recommended)
-
-1. **Start all services**:
-   ```bash
-   docker-compose up -d
-   ```
-
-2. **Access the application**:
-   - Frontend: http://localhost:4200
-   - Backend API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
-
-#### Option 2: Manual Setup
+#### Manual Setup
 
 1. **Start the backend**:
    ```bash
