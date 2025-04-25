@@ -3,9 +3,9 @@
   
   <div class="search-container">
     <mat-form-field class="search-type-field">
-      <mat-select [(ngModel)]="searchType" (selectionChange)="onSearchTypeChange()">
-        <mat-option value="top-headlines">Top Headlines</mat-option>
-        <mat-option value="by-topic">By Topic</mat-option>
+      <mat-select [(ngModel)]="selectedSearchType" (selectionChange)="onSearchTypeChange()">
+        <mat-option value="semantic">Semantic Search</mat-option>
+        <mat-option value="keyword">Keyword Search</mat-option>
       </mat-select>
     </mat-form-field>
 

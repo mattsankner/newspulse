@@ -196,10 +196,19 @@
         font-weight: 600;
         text-transform: none;
         transition: all 0.2s ease;
+        border: 1px solid var(--coffee-brown);
+        border-radius: 4px;
+        padding: 0 12px;
 
         &:hover {
           background-color: var(--coffee-brown);
           color: var(--old-lace);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active {
+          transform: translateY(0);
         }
       }
     }
@@ -207,11 +216,31 @@
     &.success-snackbar .mdc-snackbar__surface {
       border-color: var(--success-green, #28a745);
       background-color: var(--old-lace);
+
+      .mdc-button {
+        border-color: var(--success-green, #28a745);
+        color: var(--success-green, #28a745);
+
+        &:hover {
+          background-color: var(--success-green, #28a745);
+          color: var(--old-lace);
+        }
+      }
     }
 
     &.error-snackbar .mdc-snackbar__surface {
       border-color: var(--error-red, #dc3545);
       background-color: var(--old-lace);
+
+      .mdc-button {
+        border-color: var(--error-red, #dc3545);
+        color: var(--error-red, #dc3545);
+
+        &:hover {
+          background-color: var(--error-red, #dc3545);
+          color: var(--old-lace);
+        }
+      }
     }
   }
 }

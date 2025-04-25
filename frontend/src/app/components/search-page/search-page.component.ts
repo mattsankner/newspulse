@@ -80,11 +80,18 @@ export class SearchPageComponent implements OnInit {
       
       const searchTypeLabel = this.selectedSearchType === 'semantic' ? 'semantic search' : 'keyword search';
       const resultCount = results.length;
-      const message = resultCount > 0
-        ? `✨ Found ${resultCount} ${resultCount === 1 ? 'result' : 'results'} using ${searchTypeLabel}`
-        : `🔍 No results found for "${this.searchQuery}" using ${searchTypeLabel}`;
       
-      this.snackBar.open(message, 'Dismiss', this.getSnackBarConfig('success'));
+      if (resultCount > 0) {
+        const message = `✨ Found ${resultCount} ${resultCount === 1 ? 'result' : 'results'} using ${searchTypeLabel}`;
+        const snackBarRef = this.snackBar.open(message, 'View Results', this.getSnackBarConfig('success'));
+        
+        snackBarRef.onAction().subscribe(() => {
+          this.router.navigate(['/data-display']);
+        });
+      } else {
+        const message = `🔍 No results found for "${this.searchQuery}" using ${searchTypeLabel}`;
+        this.snackBar.open(message, 'Dismiss', this.getSnackBarConfig('success'));
+      }
     } catch (error) {
       console.error('Search error:', error);
       this.snackBar.open(
