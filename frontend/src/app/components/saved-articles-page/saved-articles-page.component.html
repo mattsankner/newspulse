@@ -1,0 +1,90 @@
+<div class="saved-articles-page">
+  <h1>Saved Articles</h1>
+  
+  <!-- Filter Controls -->
+  <div class="filter-section">
+    <mat-form-field class="filter-field">
+      <mat-label>Filter By</mat-label>
+      <mat-select [(ngModel)]="selectedFilter" (selectionChange)="onFilterChange()">
+        <mat-option value="title">Title (Alphabetical)</mat-option>
+        <mat-option value="source_name">Source (Alphabetical)</mat-option>
+        <mat-option value="published_at">Publication Date</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="search-field">
+      <mat-label>Search</mat-label>
+      <input matInput [(ngModel)]="searchQuery" placeholder="Search in title or description">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    
+    <button mat-raised-button color="primary" (click)="onSearch()">
+      <mat-icon>search</mat-icon>
+      Search
+    </button>
+    
+    <button mat-raised-button color="accent" (click)="exportCsv()">
+      <mat-icon>file_download</mat-icon>
+      Export CSV
+    </button>
+    
+    <button mat-raised-button color="warn" (click)="clearDatabase()">
+      <mat-icon>delete_sweep</mat-icon>
+      Clear Database
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- No Results Message -->
+  <div *ngIf="!isLoading && articles.length === 0" class="no-results">
+    <mat-icon>info</mat-icon>
+    <p>No articles saved yet.</p>
+  </div>
+  
+  <!-- No Search Results Message -->
+  <div *ngIf="!isLoading && articles.length > 0 && filteredArticles.length === 0" class="no-results">
+    <mat-icon>info</mat-icon>
+    <p>No articles found matching your search criteria.</p>
+  </div>
+
+  <!-- Articles Table -->
+  <table mat-table [dataSource]="filteredArticles" class="articles-table" *ngIf="!isLoading && filteredArticles.length > 0">
+    
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Title</th>
+      <td mat-cell *matCellDef="let article">{{ article.title }}</td>
+    </ng-container>
+
+    <!-- Description Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let article">{{ article.description }}</td>
+    </ng-container>
+
+    <!-- Source Column -->
+    <ng-container matColumnDef="source">
+      <th mat-header-cell *matHeaderCellDef>Source</th>
+      <td mat-cell *matCellDef="let article">{{ article.source_name }}</td>
+    </ng-container>
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="published_at">
+      <th mat-header-cell *matHeaderCellDef>Published</th>
+      <td mat-cell *matCellDef="let article">{{ article.published_at | date:'medium' }}</td>
+    </ng-container>
+
+    <!-- Political Stance Column -->
+    <ng-container matColumnDef="political_stance">
+      <th mat-header-cell *matHeaderCellDef>Political Stance</th>
+      <td mat-cell *matCellDef="let article">{{ article.political_stance }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

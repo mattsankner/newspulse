@@ -37,7 +37,7 @@ export class ArticleService {
     return this.http.post<{ message: string }>(`${this.apiUrl}/save`, articles);
   }
 
-  getSavedArticles(limit: number = 10, offset: number = 0): Observable<Article[]> {
+  getSavedArticles(limit: number = 100, offset: number = 0): Observable<Article[]> {
     return this.http.get<Article[]>(`${this.apiUrl}/saved?limit=${limit}&offset=${offset}`);
   }
 
@@ -53,5 +53,9 @@ export class ArticleService {
     }
 
     return this.http.get(url, { params, responseType: 'blob' });
+  }
+
+  clearDatabase(): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/clear`);
   }
 }

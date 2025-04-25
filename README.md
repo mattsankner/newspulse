@@ -406,3 +406,7 @@ LIMIT 20;
 
 ### Latest 
    python -c "from app.db.session import SessionLocal; from app.models.database import ArticleModel; db = SessionLocal(); articles = db.query(ArticleModel).limit(10).all(); print(f'Total articles: {db.query(ArticleModel).count()}'); [print(f'ID: {a.id}, Title: {a.title}, Source: {a.source_name}') for a in articles]; db.close()"
+
+
+
+   python -c "from app.db.session import SessionLocal; from app.models.database import ArticleModel; db = SessionLocal(); articles = db.query(ArticleModel).order_by(ArticleModel.published_at.desc()).limit(10).all(); print(f'Found {len(articles)} articles:'); [print(f'- {article.title} ({article.published_at})') for article in articles]; db.close()"

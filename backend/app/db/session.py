@@ -18,12 +18,16 @@ def get_database_url():
     if os.getenv('DATABASE_URL'):
         db_url = os.getenv('DATABASE_URL')
     
+    print(f"Using database URL: {db_url}")
     return db_url
 
 # Create SQLAlchemy engine with error handling
 try:
+    db_url = get_database_url().replace('postgresql://', 'postgresql+psycopg://')
+    print(f"Creating engine with URL: {db_url}")
+    
     engine = create_engine(
-        get_database_url().replace('postgresql://', 'postgresql+psycopg://'),
+        db_url,
         # Enable connection pooling
         pool_pre_ping=True,
         # Set pool size
@@ -33,7 +37,9 @@ try:
     )
     
     # Test the connection
-    engine.connect()
+    with engine.connect() as conn:
+        print("✅ Database connection successful")
+        
 except SQLAlchemyError as e:
     print(f"❌ Database connection error: {str(e)}")
     print("\nTo fix this, ensure:")
@@ -60,11 +66,13 @@ def get_db():
     try:
         yield db
     except SQLAlchemyError as e:
-        print(f"❌ Database error: {str(e)}")
+        print(f"❌ Database error during request: {str(e)}")
+        db.rollback()
         raise
     finally:
         db.close()
 
 # Create or update .env file
+#below caused error sh: backend/.env: No such file or directory when running run.sh
 #os.system("echo \"DATABASE_URL=postgresql://$(whoami)@localhost:5432/political_content\" > backend/.env")
 os.system(f"echo \"DATABASE_URL=postgresql://$(whoami)@localhost:5432/political_content\" > {os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../.env'))}")

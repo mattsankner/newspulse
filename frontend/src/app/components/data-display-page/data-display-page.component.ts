@@ -39,10 +39,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 export class DataDisplayPageComponent implements OnInit, OnDestroy {
   articles: Article[] = [];
-  searchResults: Article[] = [];
+  filteredArticles: Article[] = [];
   savedArticles: Article[] = [];
   displayedColumns: string[] = ['select', 'title', 'description', 'source', 'published_at', 'political_stance'];
-  searchQuery = '';
+  selectedFilter: string = 'title';
+  searchQuery: string = '';
   selectedStance: PoliticalStance | '' = '';
   hasData = false;
   isLoading = false;
@@ -62,21 +63,14 @@ export class DataDisplayPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Subscribe to search results
     const resultsSub = this.dataService.currentSearchResults.subscribe(results => {
-      this.searchResults = results;
-      if (!this.showingSavedArticles) {
-        this.articles = results;
-        this.hasData = results.length > 0;
-      }
+      this.filteredArticles = results;
+      this.articles = results;
+      this.hasData = results.length > 0;
       // Reset selection when new results arrive
       this.selection.clear();
     });
 
-    // Subscribe to search query
-    const querySub = this.dataService.currentSearchQuery.subscribe(query => {
-      this.searchQuery = query;
-    });
-
-    this.subscriptions.push(resultsSub, querySub);
+    this.subscriptions.push(resultsSub);
 
     // Load initial data if no search results
     if (!this.hasData) {
@@ -91,7 +85,7 @@ export class DataDisplayPageComponent implements OnInit, OnDestroy {
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.articles.length;
+    const numRows = this.filteredArticles.length;
     return numSelected === numRows;
   }
 
@@ -102,28 +96,22 @@ export class DataDisplayPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.selection.select(...this.articles);
+    this.selection.select(...this.filteredArticles);
   }
 
   loadArticles(): void {
     this.isLoading = true;
-    this.articleService.getArticles(this.selectedStance as PoliticalStance, this.searchQuery)
-      .subscribe({
-        next: (articles) => {
-          this.searchResults = articles;
-          if (!this.showingSavedArticles) {
-            this.articles = articles;
-          }
-          this.hasData = articles.length > 0;
-          this.isLoading = false;
-          // Reset selection when loading new articles
-          this.selection.clear();
-        },
-        error: (error) => {
-          console.error('Error loading articles:', error);
-          this.isLoading = false;
-        }
-      });
+    this.articleService.getSavedArticles().subscribe({
+      next: (articles) => {
+        this.articles = articles;
+        this.filteredArticles = articles;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading articles:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
   loadSavedArticles(): void {
@@ -153,16 +141,43 @@ export class DataDisplayPageComponent implements OnInit, OnDestroy {
     if (this.showingSavedArticles) {
       this.loadSavedArticles();
     } else {
-      this.articles = this.searchResults;
-      this.hasData = this.searchResults.length > 0;
+      this.articles = this.filteredArticles;
+      this.hasData = this.filteredArticles.length > 0;
     }
     // Reset selection when toggling view
     this.selection.clear();
   }
 
+  onFilterChange(): void {
+    this.applyFilters();
+  }
+
   onSearch(): void {
-    this.showingSavedArticles = false;
-    this.loadArticles();
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    if (!this.searchQuery) {
+      this.filteredArticles = this.articles;
+      return;
+    }
+
+    const query = this.searchQuery.toLowerCase();
+    this.filteredArticles = this.articles.filter(article => {
+      switch (this.selectedFilter) {
+        case 'title':
+          return article.title.toLowerCase().includes(query);
+        case 'source_name':
+          return article.source_name.toLowerCase().includes(query);
+        case 'political_stance':
+          return article.political_stance?.toLowerCase().includes(query) ?? false;
+        case 'published_at':
+          const date = new Date(article.published_at).toLocaleDateString();
+          return date.includes(query);
+        default:
+          return true;
+      }
+    });
   }
 
   onStanceChange(): void {
@@ -182,24 +197,32 @@ export class DataDisplayPageComponent implements OnInit, OnDestroy {
     
     // Format the articles to match the backend expected model
     const formattedArticles: Article[] = selectedArticles.map(article => {
-      // Ensure URL is properly formatted - the most common issue
-      // Convert any non-string URL to a string
-      const url = typeof article.url === 'string' ? article.url : String(article.url);
-      
+      // Format the date as expected by the backend (ISO string with Z suffix)
+      let publishedAt = article.published_at;
+      if (publishedAt) {
+        // Check if it's already a string in the correct format
+        if (typeof publishedAt !== 'string' || !publishedAt.endsWith('Z')) {
+          // Convert to ISO string
+          const date = new Date(publishedAt);
+          publishedAt = date.toISOString();
+        }
+      } else {
+        publishedAt = new Date().toISOString();
+      }
+
       return {
         id: article.id,
-        title: article.title,
-        description: article.description,
-        url: url,
-        source_name: article.source_name,
-        published_at: article.published_at,
-        // Optional fields
-        content: article.content,
-        source_id: article.source_id,
-        author: article.author,
-        url_to_image: article.url_to_image,
-        political_stance: article.political_stance,
-        classification: article.classification,
+        title: article.title || '',
+        description: article.description || '',
+        url: typeof article.url === 'string' ? article.url : String(article.url || ''),
+        source_name: article.source_name || '',
+        published_at: publishedAt,
+        content: article.content || '',
+        source_id: article.source_id || '',
+        author: article.author || '',
+        url_to_image: article.url_to_image || '',
+        political_stance: article.political_stance || '',
+        classification: article.classification || undefined,
         raw_data: article.raw_data || {}
       };
     });
@@ -209,18 +232,19 @@ export class DataDisplayPageComponent implements OnInit, OnDestroy {
     this.articleService.saveArticlesToDatabase(formattedArticles)
       .subscribe({
         next: (response) => {
-          this.snackBar.open(response.message, 'Close', { duration: 3000 });
+          console.log('Save response:', response);
+          this.snackBar.open(response.message, 'View Saved', { duration: 3000 })
+            .onAction().subscribe(() => {
+              // Navigate to saved articles page when clicked
+              window.location.href = '/saved-articles';
+            });
           this.isSaving = false;
           // Clear selection after successful save
           this.selection.clear();
-          // Refresh saved articles if we're viewing them
-          if (this.showingSavedArticles) {
-            this.loadSavedArticles();
-          }
         },
         error: (error) => {
           console.error('Error saving articles:', error);
-          this.snackBar.open('Error saving articles to database', 'Close', { duration: 5000 });
+          this.snackBar.open('Error saving articles to database: ' + (error.message || 'Unknown error'), 'Close', { duration: 5000 });
           this.isSaving = false;
         }
       });

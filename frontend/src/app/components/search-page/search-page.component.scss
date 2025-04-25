@@ -18,11 +18,70 @@
   }
 
   .search-container {
-    background-color: var(--old-lace);
-    border: 1px solid var(--tan);
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .search-field, .search-type-field {
+      flex: 1;
+      min-width: 200px;
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+
+      ::ng-deep .mat-mdc-form-field-infix {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        background-color: var(--old-lace);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      ::ng-deep .mat-mdc-form-field-flex {
+        padding: 0 12px;
+      }
+
+      ::ng-deep .mat-mdc-form-field-label {
+        color: #000000;
+      }
+
+      ::ng-deep .mat-mdc-input-element {
+        color: #000000;
+        font-family: 'Georgia', 'Baskerville', serif;
+      }
+
+      ::ng-deep .mat-mdc-select-value {
+        color: #000000;
+        font-family: 'Georgia', 'Baskerville', serif;
+      }
+
+      ::ng-deep .mat-mdc-select-arrow {
+        color: #000000;
+      }
+      
+      // Hide the floating label when content is present
+      ::ng-deep .mdc-floating-label--float-above {
+        display: none;
+      }
+    }
+
+    button {
+      font-family: 'Georgia', 'Baskerville', serif;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+    }
   }
 
   .spacer {
@@ -50,24 +109,24 @@
       }
 
       .mat-mdc-form-field-label {
-        color: var(--coffee-brown);
+        color: #000000;
         font-size: 1.1rem;
         transform: translateY(-1.5em) scale(0.75);
       }
 
       .mat-mdc-input-element {
-        color: var(--rich-brown);
+        color: #000000;
         font-size: 1.1rem;
-        caret-color: var(--coffee-brown);
+        caret-color: #000000;
       }
 
       .mat-mdc-select-value {
-        color: var(--rich-brown);
+        color: #000000;
         font-size: 1.1rem;
       }
 
       .mat-mdc-select-arrow {
-        color: var(--coffee-brown);
+        color: #000000;
       }
 
       // Remove underline and fix focus state
@@ -80,10 +139,9 @@
         background-color: rgba(107, 68, 35, 0.04);
       }
 
-      // Fix floating label position
+      // Hide floating label when content is present
       .mdc-floating-label--float-above {
-        color: var(--coffee-brown);
-        transform: translateY(-1.5em) scale(0.75);
+        display: none;
       }
     }
   }
@@ -104,5 +162,67 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+  }
+}
+
+// Custom snackbar styling
+::ng-deep {
+  .themed-snackbar {
+    &.mat-mdc-snack-bar-container {
+      position: fixed;
+      margin: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: slideIn 0.3s ease-out;
+
+      .mdc-snackbar__surface {
+        background-color: var(--old-lace);
+        border: 2px solid var(--coffee-brown);
+        padding: 0.5rem 1rem;
+      }
+
+      .mat-mdc-snack-bar-label {
+        color: var(--rich-brown);
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+      }
+
+      .mat-mdc-snack-bar-actions {
+        padding-inline-start: 1rem;
+      }
+
+      .mdc-button {
+        color: var(--coffee-brown);
+        font-weight: 600;
+        text-transform: none;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: var(--coffee-brown);
+          color: var(--old-lace);
+        }
+      }
+    }
+
+    &.success-snackbar .mdc-snackbar__surface {
+      border-color: var(--success-green, #28a745);
+      background-color: var(--old-lace);
+    }
+
+    &.error-snackbar .mdc-snackbar__surface {
+      border-color: var(--error-red, #dc3545);
+      background-color: var(--old-lace);
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 } 

@@ -1,6 +1,7 @@
 import re
 import logging
 from typing import List, Dict, Any
+from datetime import datetime
 
 from ..models.article import Article
 
@@ -80,3 +81,21 @@ class DataCleaner:
         text = text.strip()
         
         return text
+
+    # def format_date(self, date_str: str) -> str:
+    #     """Format date string to consistent format"""
+    #     if not date_str:
+    #         return None
+    #     try:
+    #         # Handle various date formats
+    #         formats = ["%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"]
+    #         for fmt in formats:
+    #             try:
+    #                 date_obj = datetime.strptime(date_str, fmt)
+    #                 return date_obj.strftime("%Y-%m-%dT%H:%M:%SZ")
+    #             except ValueError:
+    #                 continue
+    #         return None
+    #     except Exception as e:
+    #         self.logger.error(f"Error formatting date {date_str}: {str(e)}")
+    #         return None

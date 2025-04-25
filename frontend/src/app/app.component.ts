@@ -23,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
       <nav class="nav-links">
         <a mat-button routerLink="/search" routerLinkActive="active">Search</a>
         <a mat-button routerLink="/data" routerLinkActive="active">Data</a>
+        <a mat-button routerLink="/saved-articles" routerLinkActive="active">Saved Articles</a>
         <a mat-button routerLink="/sentiment" routerLinkActive="active">Sentiment</a>
         <a mat-button routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
       </nav>

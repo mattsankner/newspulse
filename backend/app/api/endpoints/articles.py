@@ -2,10 +2,11 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException, Response
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
-from datetime import date
+from datetime import date, datetime
 import io
 import csv
 import time
+import re
 
 from app.db.session import get_db
 from app.models import Article, PoliticalStance
@@ -14,6 +15,44 @@ from app.services.news_client import NewsClient
 from app.services.article_service import ArticleService
 
 router = APIRouter()
+
+def parse_datetime(date_str: str) -> datetime:
+    """
+    Parse different datetime formats and return a datetime object.
+    """
+    if not date_str:
+        return datetime.utcnow()
+    
+    # Try different formats
+    formats = [
+        "%Y-%m-%dT%H:%M:%SZ",  # Standard ISO format with Z
+        "%Y-%m-%dT%H:%M:%S.%fZ", # ISO format with milliseconds and Z
+        "%Y-%m-%dT%H:%M:%S", # ISO format without Z
+        "%Y-%m-%dT%H:%M:%S.%f", # ISO format with milliseconds without Z
+        "%Y-%m-%d %H:%M:%S", # Simple format
+        "%Y-%m-%d", # Just date
+    ]
+    
+    for fmt in formats:
+        try:
+            return datetime.strptime(date_str, fmt)
+        except ValueError:
+            continue
+    
+    # If all formats fail, try to parse ISO format with timezone offset
+    try:
+        # Replace Z with +00:00 (UTC) if present
+        if date_str.endswith('Z'):
+            date_str = date_str[:-1] + '+00:00'
+        
+        # Parse ISO format with timezone info
+        return datetime.fromisoformat(date_str)
+    except ValueError:
+        pass
+    
+    # If all parsing attempts fail, return current time
+    print(f"Could not parse datetime: {date_str}, using current time")
+    return datetime.utcnow()
 
 @router.get("/", response_model=List[Article])
 async def get_articles(
@@ -84,15 +123,22 @@ async def save_articles(
         
         for i, article in enumerate(articles):
             try:
-                article_url = str(article.url)
+                # Log the article being processed
                 print(f"Processing article {i+1}/{len(articles)}: '{article.title}'")
+                
+                # Ensure URL is properly formatted
+                article_url = str(article.url)
+                if not article_url.startswith(("http://", "https://")):
+                    article_url = f"https://{article_url}"
+                    article.url = article_url
+                
                 print(f"URL: {article_url}")
                 
                 # Check if article already exists by URL
-                existing = db.query(ArticleModel).filter(ArticleModel.url == article_url).first()
+                existing_article = db.query(ArticleModel).filter(ArticleModel.url == article_url).first()
                 
-                if existing:
-                    print(f"Found existing article with URL: {existing.url}")
+                if existing_article:
+                    print(f"Article with URL {article_url} already exists")
                     skipped_count += 1
                     continue
                 
@@ -105,6 +151,16 @@ async def save_articles(
                 
                 # Generate a unique ID if not present
                 article_id = article.id if hasattr(article, 'id') and article.id else f"article_{saved_count}_{int(time.time())}"
+                print(f"Using ID: {article_id}")
+                
+                # Ensure published_at is a valid datetime
+                try:
+                    published_at = parse_datetime(article.published_at)
+                    print(f"Parsed date: {published_at}")
+                except Exception as e:
+                    print(f"Error parsing date '{article.published_at}': {str(e)}")
+                    published_at = datetime.utcnow()
+                    print(f"Using current time instead: {published_at}")
                 
                 # Convert Pydantic model to SQLAlchemy model
                 db_article = ArticleModel(
@@ -116,7 +172,7 @@ async def save_articles(
                     source_id=article.source_id if hasattr(article, 'source_id') else None,
                     source_name=article.source_name,
                     author=article.author if hasattr(article, 'author') else None,
-                    published_at=article.published_at,
+                    published_at=published_at,
                     url_to_image=str(article.url_to_image) if hasattr(article, 'url_to_image') and article.url_to_image else None,
                     raw_data=article.raw_data if hasattr(article, 'raw_data') else {}
                 )
@@ -127,10 +183,23 @@ async def save_articles(
                 error_msg = f"Error with article '{article.title}': {str(e)}"
                 print(error_msg)
                 errors.append(error_msg)
+                # Don't fail completely on a single article error
+                continue
         
         if saved_count > 0:
             print(f"Committing {saved_count} articles to database")
             db.commit()
+            
+            # Double-check the articles were saved
+            for article in articles:
+                article_title = article.title
+                found = db.query(ArticleModel).filter(ArticleModel.title == article_title).first()
+                if found:
+                    print(f"Confirmed article saved: {article_title}")
+                else:
+                    print(f"WARNING: Could not confirm article was saved: {article_title}")
+        else:
+            print("No articles to commit")
         
         result = {
             "message": f"Successfully saved {saved_count} articles to the database"
@@ -300,6 +369,34 @@ async def get_saved_articles(
         
     except Exception as e:
         error_msg = f"Error retrieving saved articles: {str(e)}"
+        print(error_msg)
+        raise HTTPException(
+            status_code=500,
+            detail=error_msg
+        )
+
+@router.delete("/clear")
+async def clear_database(
+    db: Session = Depends(get_db)
+) -> dict:
+    """
+    Clear all saved articles from the database.
+    """
+    try:
+        # Count articles before deletion
+        article_count = db.query(ArticleModel).count()
+        
+        # Delete all articles
+        db.query(ArticleModel).delete()
+        db.commit()
+        
+        return {
+            "message": f"Successfully deleted {article_count} articles from the database"
+        }
+        
+    except Exception as e:
+        db.rollback()
+        error_msg = f"Error clearing database: {str(e)}"
         print(error_msg)
         raise HTTPException(
             status_code=500,
