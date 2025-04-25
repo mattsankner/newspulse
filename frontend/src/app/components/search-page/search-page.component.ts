@@ -71,6 +71,10 @@ export class SearchPageComponent implements OnInit {
       return;
     }
 
+    // Clear previous search results and navigate to data page immediately
+    this.dataService.clearSearch();
+    this.router.navigate(['/data']);
+
     this.isLoading = true;
     try {
       const searchObservable = this.articleService.getArticlesByTopic(this.searchQuery);
@@ -86,7 +90,7 @@ export class SearchPageComponent implements OnInit {
         const snackBarRef = this.snackBar.open(message, 'View Results', this.getSnackBarConfig('success'));
         
         snackBarRef.onAction().subscribe(() => {
-          this.router.navigate(['/data-display']);
+          this.router.navigate(['/data']);
         });
       } else {
         const message = `🔍 No results found for "${this.searchQuery}" using ${searchTypeLabel}`;
@@ -103,4 +107,4 @@ export class SearchPageComponent implements OnInit {
       this.isLoading = false;
     }
   }
-} 
+}
